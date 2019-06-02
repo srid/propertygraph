@@ -17,8 +17,11 @@ category:            Data
 extra-source-files:  CHANGELOG.md
 
 library
-  -- exposed-modules:
-  -- other-modules:
+  exposed-modules:
+    Data.PropertyGraph
+    Data.PropertyGraph.Labelled
+  other-modules:
+    Data.PropertyGraph.Internal
   -- other-extensions:
   build-depends:       base
                      , aeson
