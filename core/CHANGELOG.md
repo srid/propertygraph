@@ -1,4 +1,4 @@
-# Revision history for core
+# Revision history for propertygraph-core
 
 ## 0.1.0.0 -- YYYY-mm-dd
 
