@@ -1,6 +1,6 @@
 let
   pkgs = import <nixpkgs> { };
-  compilerVersion = "ghc844";
+  compilerVersion = "ghc844";  # TODO: Use the ghc from reflex-platform (obelisk) for cache benefits
   compiler = pkgs.haskell.packages."${compilerVersion}";
 in
 compiler.developPackage {
@@ -24,5 +24,14 @@ compiler.developPackage {
       rev = "75d7f07b5ac357fb20494f98f6d865b78ee44b06";
       sha256 = "1wx4l1mgyplcpczj7n79vf3p0n1fbbfzvh17nw3cqf4rscvp8y0f";
     };
+  };
+
+  overrides = self: super: with pkgs.haskell.lib; {
+    # 0.4 version is not released yet.
+    # TODO: upgrade to latest.
+    algebraic-graphs = dontCheck (self.callCabal2nix "algebraic-graphs" (builtins.fetchTarball {
+      url = "https://github.com/snowleopard/alga/archive/1754312.tar.gz";
+      sha256 = "09gp4vgslcr9r5w8h5jm1la0c5fnzxmhiv530rq7i16sisfrj4rr";
+    }) {});
   };
 }
