@@ -92,13 +92,13 @@ data LabelledGraphView v vm em :: * -> * where
 -- | View operations for `PropertyGraph`
 data PropertyGraphView v vp ep r where
   PropertyGraphView_All :: PropertyGraphView v vp ep (PropertyGraph vp ep v)
-  PropertyGraphView_GetVertexProperty :: GCompare vp => v -> vp a -> PropertyGraphView v vp ep (Maybe a)
-  PropertyGraphView_GetEdgeProperty :: GCompare ep => v -> v -> ep a -> PropertyGraphView v vp ep (Maybe a)
+  PropertyGraphView_GetVertexProperty :: GCompare vp => v -> DSum vp Identity -> PropertyGraphView v vp ep (Maybe a)
+  PropertyGraphView_GetEdgeProperty :: GCompare ep => v -> v -> DSum ep Identity -> PropertyGraphView v vp ep (Maybe a)
 
 deriveJSONGADT ''LabelledGraphEdit
 deriveJSONGADT ''LabelledGraphView
 deriveJSONGADT ''PropertyGraphEdit
--- deriveJSONGADT ''PropertyGraphView
+deriveJSONGADT ''PropertyGraphView
 
 -- FIXME: Getting some weird Skolem "Could not deduce" error.
 -- deriving instance
