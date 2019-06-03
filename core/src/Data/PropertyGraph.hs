@@ -11,6 +11,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE UndecidableInstances #-}
 
 -- | Data storage types
 module Data.PropertyGraph where
@@ -76,10 +77,10 @@ data LabelledGraphEdit v vm em :: * -> * where
 -- | PropertyGraphEdit operations for `PropertyGraph`
 data PropertyGraphEdit v vp ep r where
   PropertyGraphEdit_ClearAll :: PropertyGraphEdit v vp ep ()
-  PropertyGraphEdit_AddVertex :: (DMap vp Identity) -> PropertyGraphEdit v vp ep v
-  PropertyGraphEdit_AddEdge :: v -> v -> (DMap ep Identity) -> PropertyGraphEdit v vp ep ()
-  PropertyGraphEdit_SetVertexProperty :: GCompare vp => v -> vp a -> a -> PropertyGraphEdit v vp ep ()
-  PropertyGraphEdit_SetEdgeProperty :: GCompare ep => v -> v -> ep a -> a -> PropertyGraphEdit v vp ep ()
+  PropertyGraphEdit_AddVertex :: DMap vp Identity -> PropertyGraphEdit v vp ep v
+  PropertyGraphEdit_AddEdge :: v -> v -> DMap ep Identity -> PropertyGraphEdit v vp ep ()
+  PropertyGraphEdit_SetVertexProperty :: GCompare vp => v -> DSum vp Identity -> PropertyGraphEdit v vp ep ()
+  PropertyGraphEdit_SetEdgeProperty :: GCompare ep => v -> v -> DSum ep Identity -> PropertyGraphEdit v vp ep ()
 
 -- | View operations for `LabelledGraph`
 data LabelledGraphView v vm em :: * -> * where
@@ -96,7 +97,7 @@ data PropertyGraphView v vp ep r where
 
 deriveJSONGADT ''LabelledGraphEdit
 deriveJSONGADT ''LabelledGraphView
--- deriveJSONGADT ''PropertyGraphEdit
+deriveJSONGADT ''PropertyGraphEdit
 -- deriveJSONGADT ''PropertyGraphView
 
 -- FIXME: Getting some weird Skolem "Could not deduce" error.
