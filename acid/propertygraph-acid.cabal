@@ -32,7 +32,7 @@ library
                      , dependent-sum-template
                      , containers
                      , algebraic-graphs >= 0.4
-                     , acid-state
+                     , acid-state >= 0.15.0
                      , safecopy
                      , safe
                      , propertygraph-core
