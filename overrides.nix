@@ -2,20 +2,20 @@
   aeson-gadt-th = pkgs.fetchFromGitHub {
     owner = "obsidiansystems";
     repo = "aeson-gadt-th";
-    rev = "65df0b070dd21e4c2285fc485e5b9857dbc8ad5b";
-    sha256 = "1h6wkag38r9xmf3yd0f64h0mfzb7cfj8cf7n2r5mqdyiqz3a5x4w";
+    rev = "e40c293901a9cb9be4b0748109f4bc6806bfdb79";
+    sha256 = "08iqyzd4240g7af2lwgxmqbfglyxxii43i2zi01xmk1kg8inzs3v";
   };
   constraints-extras = pkgs.fetchFromGitHub {
     owner = "obsidiansystems";
     repo = "constraints-extras";
-    rev = "30f10c03dd96e50c089f0613f99951805bff7397";
-    sha256 = "196b8kbcp744gqhh964m54vw4cdg15p6lc7cm2vxbh15cbqdz7ir";
+    rev = "f6a12f9403c77ae075029171fc572e7d26222bb7";
+    sha256 = "1kflqgn5zcmd5f7z8m4z45xd0ybgh080qi9x9dkl15qsszrca6ry";
   };
   dependent-sum-aeson-orphans = pkgs.fetchFromGitHub {
     owner = "obsidiansystems";
     repo = "dependent-sum-aeson-orphans";
-    rev = "198fb00b9307a1bd44dfae7abad75363576e9d69";
-    sha256 = "19555ddi7lrwpra55qxcl67i9c3w9yhfnkbw0smb3ckz0yzvra0n";
+    rev = "75d7f07b5ac357fb20494f98f6d865b78ee44b06";
+    sha256 = "1wx4l1mgyplcpczj7n79vf3p0n1fbbfzvh17nw3cqf4rscvp8y0f";
   };
 
   acid-state = pkgs.fetchFromGitHub {
