@@ -159,12 +159,6 @@ jsonMethodSerialiser = MethodSerialiser jsonSerialiser jsonSerialiser
     jsonSerialiser :: (FromJSON a, ToJSON a) => Serialiser a
     jsonSerialiser = Serialiser encode eitherDecode
 
--- TODO: these should go to example
--- instance IsAcidic JunctureGraph where
---   acidEvents =
---     [ UpdateEvent runSomeLabelledGraphEdit jsonMethodSerialiser
---     , QueryEvent runSomeLabelledGraphView jsonMethodSerialiser
---     ]
 
 instance SafeCopy (LAM.AdjacencyMap e a) where
   putCopy = contain . safePut

@@ -39,6 +39,7 @@ executable example
                      , propertygraph-acid
                      , mtl
   hs-source-dirs:      src
+  ghc-options:       -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns -Wredundant-constraints
   default-language:    Haskell2010
   default-extensions:
     TypeFamilies
