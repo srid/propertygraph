@@ -11,6 +11,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE UndecidableInstances #-}
 
 -- | Data storage types
 module Data.PropertyGraph where
@@ -73,13 +74,13 @@ data LabelledGraphEdit v vm em :: * -> * where
   LabelledGraphEdit_SetVertexProperties :: v -> vm -> LabelledGraphEdit v vm em ()
   LabelledGraphEdit_SetEdgeProperties :: v -> v -> em -> LabelledGraphEdit v vm em ()
 
--- | PropertyGraphEdit operatios for `PropertyGraph`
+-- | PropertyGraphEdit operations for `PropertyGraph`
 data PropertyGraphEdit v vp ep r where
   PropertyGraphEdit_ClearAll :: PropertyGraphEdit v vp ep ()
-  PropertyGraphEdit_AddVertex :: (DMap vp Identity) -> PropertyGraphEdit v vp ep v
-  PropertyGraphEdit_AddEdge :: v -> v -> (DMap ep Identity) -> PropertyGraphEdit v vp ep ()
-  PropertyGraphEdit_SetVertexProperty :: GCompare vp => v -> vp a -> a -> PropertyGraphEdit v vp ep ()
-  PropertyGraphEdit_SetEdgeProperty :: GCompare ep => v -> v -> ep a -> a -> PropertyGraphEdit v vp ep ()
+  PropertyGraphEdit_AddVertex :: DMap vp Identity -> PropertyGraphEdit v vp ep v
+  PropertyGraphEdit_AddEdge :: v -> v -> DMap ep Identity -> PropertyGraphEdit v vp ep ()
+  PropertyGraphEdit_SetVertexProperty :: GCompare vp => v -> DSum vp Identity -> PropertyGraphEdit v vp ep ()
+  PropertyGraphEdit_SetEdgeProperty :: GCompare ep => v -> v -> DSum ep Identity -> PropertyGraphEdit v vp ep ()
 
 -- | View operations for `LabelledGraph`
 data LabelledGraphView v vm em :: * -> * where
@@ -92,28 +93,12 @@ data LabelledGraphView v vm em :: * -> * where
 data PropertyGraphView v vp ep r where
   PropertyGraphView_All :: PropertyGraphView v vp ep (PropertyGraph vp ep v)
   PropertyGraphView_GetVertexProperty :: GCompare vp => v -> vp a -> PropertyGraphView v vp ep (Maybe a)
-  PropertyGraphView_GetEdgeProperty :: GCompare ep => v -> v -> ep a -> PropertyGraphView v vp ep (Maybe a)
-
--- Derive manually because `deriveArgDict` is broken for type variables in constructor arguments
-instance ArgDict (LabelledGraphEdit v vm em) where
-  type ConstraintsFor (LabelledGraphEdit v vm em) c = (c v, c (), c vm, c em)
-  argDict = \case
-    LabelledGraphEdit_ClearAll {} -> Dict
-    LabelledGraphEdit_AddVertex {} -> Dict
-    LabelledGraphEdit_AddEdge {} -> Dict
-    LabelledGraphEdit_SetVertexProperties {} -> Dict
-    LabelledGraphEdit_SetEdgeProperties {} -> Dict
-
-instance ArgDict (LabelledGraphView v vm em) where
-  type ConstraintsFor (LabelledGraphView v vm em) c = (c (), c vm, c em, c (LabelledGraph vm em v))
-  argDict = \case
-    LabelledGraphView_Unused _ _ _ -> Dict
-    LabelledGraphView_All -> Dict
-    LabelledGraphView_GetVertexProperties _ -> Dict
-    LabelledGraphView_GetEdgeProperties _ _ -> Dict
+  PropertyGraphView_GetEdgeProperty :: GCompare ep => v -> v -> ep a-> PropertyGraphView v vp ep (Maybe a)
 
 deriveJSONGADT ''LabelledGraphEdit
 deriveJSONGADT ''LabelledGraphView
+deriveJSONGADT ''PropertyGraphEdit
+-- deriveJSONGADT ''PropertyGraphView
 
 -- FIXME: Getting some weird Skolem "Could not deduce" error.
 -- deriving instance

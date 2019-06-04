@@ -125,10 +125,10 @@ runEdit st pe = case pe of
   PropertyGraphEdit_ClearAll -> runLabelledGraphEdit st LabelledGraphEdit_ClearAll
   PropertyGraphEdit_AddVertex vm -> runLabelledGraphEdit st $ LabelledGraphEdit_AddVertex vm
   PropertyGraphEdit_AddEdge v1 v2 meta -> runLabelledGraphEdit st $ LabelledGraphEdit_AddEdge v1 v2 meta
-  PropertyGraphEdit_SetVertexProperty v p val -> do
+  PropertyGraphEdit_SetVertexProperty v (p :=> Identity val) -> do
     vprops :: DMap vp Identity <- runLabelledGraphView st $ LabelledGraphView_GetVertexProperties v
     runLabelledGraphEdit st $ LabelledGraphEdit_SetVertexProperties v $ DMap.insert p (Identity val) vprops
-  PropertyGraphEdit_SetEdgeProperty v1 v2 p val -> do
+  PropertyGraphEdit_SetEdgeProperty v1 v2 (p :=> Identity val) -> do
     eprops :: DMap ep Identity <- runLabelledGraphView st $ LabelledGraphView_GetEdgeProperties v1 v2
     runLabelledGraphEdit st $ LabelledGraphEdit_SetEdgeProperties v1 v2 $ DMap.insert p (Identity val) eprops
 
