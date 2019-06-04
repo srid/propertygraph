@@ -12,6 +12,7 @@
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 
 -- | Data storage types
 module Data.PropertyGraph where
@@ -93,20 +94,28 @@ data LabelledGraphView v vm em :: * -> * where
 data PropertyGraphView v vp ep r where
   PropertyGraphView_All :: PropertyGraphView v vp ep (PropertyGraph vp ep v)
   PropertyGraphView_GetVertexProperty :: GCompare vp => v -> vp a -> PropertyGraphView v vp ep (Maybe a)
-  PropertyGraphView_GetEdgeProperty :: GCompare ep => v -> v -> ep a-> PropertyGraphView v vp ep (Maybe a)
+  PropertyGraphView_GetEdgeProperty :: GCompare ep => v -> v -> ep a -> PropertyGraphView v vp ep (Maybe a)
+
+-- Derive manually because `deriveArgDict` is broken for type variables in constructor arguments
+instance ArgDict (LabelledGraphEdit v vm em) where
+  type ConstraintsFor (LabelledGraphEdit v vm em) c = (c v, c (), c vm, c em)
+  argDict = \case
+    LabelledGraphEdit_ClearAll {} -> Dict
+    LabelledGraphEdit_AddVertex {} -> Dict
+    LabelledGraphEdit_AddEdge {} -> Dict
+    LabelledGraphEdit_SetVertexProperties {} -> Dict
+    LabelledGraphEdit_SetEdgeProperties {} -> Dict
+
+instance ArgDict (LabelledGraphView v vm em) where
+  type ConstraintsFor (LabelledGraphView v vm em) c = (c (), c vm, c em, c (LabelledGraph vm em v))
+  argDict = \case
+    LabelledGraphView_Unused _ _ _ -> Dict
+    LabelledGraphView_All -> Dict
+    LabelledGraphView_GetVertexProperties _ -> Dict
+    LabelledGraphView_GetEdgeProperties _ _ -> Dict
 
 deriveJSONGADT ''LabelledGraphEdit
 deriveJSONGADT ''LabelledGraphView
-deriveJSONGADT ''PropertyGraphEdit
+-- deriveJSONGADT ''PropertyGraphEdit
 -- deriveJSONGADT ''PropertyGraphView
 
--- FIXME: Getting some weird Skolem "Could not deduce" error.
--- deriving instance
---   ( ToJSON v
---   , ToJSONKey v
---   , ArgDict vp
---   , ArgDict ep
---   , ConstraintsFor ep (ComposeC ToJSON Identity)
---   , ConstraintsFor vp (ComposeC ToJSON Identity)
---   -- , ToJSON (vp (Skolem (Data.Constraint.Forall.ComposeC ToJSON vp)))
---   ) => ToJSON (PropertyGraph vp ep v)
