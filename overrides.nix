@@ -34,4 +34,5 @@
     sha256 = "09gp4vgslcr9r5w8h5jm1la0c5fnzxmhiv530rq7i16sisfrj4rr";
   };
   propertygraph-core = ./core;
+  propertygraph-acid = ./acid;
 }
