@@ -93,20 +93,9 @@ data LabelledGraphView v vm em :: * -> * where
 data PropertyGraphView v vp ep r where
   PropertyGraphView_All :: PropertyGraphView v vp ep (PropertyGraph vp ep v)
   PropertyGraphView_GetVertexProperty :: GCompare vp => v -> vp a -> PropertyGraphView v vp ep (Maybe a)
-  PropertyGraphView_GetEdgeProperty :: GCompare ep => v -> v -> ep a-> PropertyGraphView v vp ep (Maybe a)
+  PropertyGraphView_GetEdgeProperty :: GCompare ep => v -> v -> ep a -> PropertyGraphView v vp ep (Maybe a)
 
 deriveJSONGADT ''LabelledGraphEdit
 deriveJSONGADT ''LabelledGraphView
 deriveJSONGADT ''PropertyGraphEdit
 -- deriveJSONGADT ''PropertyGraphView
-
--- FIXME: Getting some weird Skolem "Could not deduce" error.
--- deriving instance
---   ( ToJSON v
---   , ToJSONKey v
---   , ArgDict vp
---   , ArgDict ep
---   , ConstraintsFor ep (ComposeC ToJSON Identity)
---   , ConstraintsFor vp (ComposeC ToJSON Identity)
---   -- , ToJSON (vp (Skolem (Data.Constraint.Forall.ComposeC ToJSON vp)))
---   ) => ToJSON (PropertyGraph vp ep v)
